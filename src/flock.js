@@ -191,15 +191,21 @@ export class Flock {
           const near = this.cell * 13;
           if (dx * dx + dy * dy < near * near) steer += angleDelta(b.angle, Math.atan2(dy, dx)) * 1.5;
         }
-        // Flee from the pointer.
         if (this.pointer) {
-          const dx = b.x - this.pointer.x;
-          const dy = b.y - this.pointer.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < 150 * 150) {
-            steer += angleDelta(b.angle, Math.atan2(dy, dx)) * 6;
-            b.boost = Math.max(b.boost, 1.6);
-          }
+          // Follow the cursor: each one heads for its own spot in a loose,
+          // slowly turning ring around it, and hurries when it is far away.
+          const ring = this.cell * (5 + (b.id % 5) * 3.5);
+          const spin = this.time * 0.5 + b.id * 2.4;
+          const dx = this.pointer.x + Math.cos(spin) * ring - b.x;
+          const dy = this.pointer.y + Math.sin(spin) * ring - b.y;
+          const dist = Math.hypot(dx, dy);
+          steer += angleDelta(b.angle, Math.atan2(dy, dx)) * Math.min(5, 0.6 + dist / 60);
+          b.boost = Math.max(b.boost, Math.min(3, dist / 160));
+        } else {
+          // No cursor (phones, or the mouse has left): drift from the
+          // bottom left corner towards the top right.
+          steer += angleDelta(b.angle, Math.atan2(-this.h, this.w)) * 1.6;
+          b.boost = Math.max(b.boost, 0.5);
         }
         // Steer around text blocks.
         for (const r of this.rects) {
@@ -227,10 +233,27 @@ export class Flock {
       b.y += Math.sin(b.angle) * v * dt + Math.sin(b.phase * 0.5) * 6 * dt;
 
       if (b.life === Infinity) {
-        if (b.x < -margin) b.x = this.w + margin;
-        if (b.x > this.w + margin) b.x = -margin;
-        if (b.y < -margin) b.y = this.h + margin;
-        if (b.y > this.h + margin) b.y = -margin;
+        const gone = b.x < -margin || b.x > this.w + margin || b.y < -margin || b.y > this.h + margin;
+        if (gone && !this.pointer) {
+          // Re-enter along the left or bottom edge, so the flow keeps
+          // coming from the bottom left.
+          // Pick a spot that is not behind a text block, or it would be
+          // pushed straight back out.
+          const pad = this.cell * 8;
+          for (let tries = 0; tries < 16; tries++) {
+            if (Math.random() < this.h / (this.w + this.h)) {
+              b.x = -margin;
+              b.y = this.h * Math.random();
+            } else {
+              b.x = this.w * Math.random();
+              b.y = this.h + margin;
+            }
+            const ex = Math.max(b.x, 0);
+            const ey = Math.min(b.y, this.h);
+            if (!this.rects.some((r) => ex > r.left - pad && ex < r.right + pad && ey > r.top - pad && ey < r.bottom + pad)) break;
+          }
+          b.angle = Math.atan2(-this.h, this.w);
+        }
       }
     }
 

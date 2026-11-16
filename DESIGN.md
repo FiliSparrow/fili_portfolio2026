@@ -97,7 +97,7 @@ Covers and images use a 16px radius. The sheet uses 28px (20px on phones). Chips
 
 ## Components
 
-- **Butterfly field** (`src/flock.js`): grid-snapped canvas drawn at about 30 frames a second. Butterflies steer around elements marked `data-avoid`, keep apart from each other, flee the mouse and scatter from a tap. With reduced motion it draws one still frame.
+- **Butterfly field** (`src/flock.js`): grid-snapped canvas drawn at about 30 frames a second. Butterflies follow the mouse in a loose ring. With no mouse (touch screens, or the cursor off the page) they flow from the bottom left to the top right. They steer around elements marked `data-avoid`, keep apart from each other and scatter from a click or tap. With reduced motion it draws one still frame.
 - **Decode** (`src/decode.js`): text settles from grid characters, left to right, in 400 to 450ms. Used on the name and case-study titles only.
 - **Project card:** title and one-line summary above, cover, then category and "View" in mono below. The whole card is one link.
 - **Cover to case study:** a same-document view transition, 450ms, easing `cubic-bezier(0.16, 1, 0.3, 1)`. A short scatter of five butterflies flies out as it opens. Browsers without view transitions get a 400ms fade.

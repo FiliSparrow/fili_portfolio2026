@@ -169,7 +169,9 @@ function setupFlock() {
   watch.observe(foot);
   document.addEventListener("visibilitychange", updateFlock);
 
-  // Butterflies move away from the mouse, and scatter from a click or tap.
+  // Butterflies follow the mouse, and scatter from a click or tap.
+  // With no mouse (touch screens, or the cursor off the page) they flow
+  // from the bottom left to the top right.
   window.addEventListener("pointermove", (e) => {
     flock.pointer = e.pointerType === "mouse" ? { x: e.clientX, y: e.clientY } : null;
   });
