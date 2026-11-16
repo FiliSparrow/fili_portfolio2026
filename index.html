@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#060a1a" />
+    <meta name="description" content="Portfolio of Maia Branson, junior designer." />
+    <title>Maia Branson</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#work">Skip to the work</a>
+
+    <!-- The butterfly field. It sits behind the whole page. -->
+    <div class="field" aria-hidden="true"><canvas id="field"></canvas></div>
+
+    <div id="home">
+      <header class="hero">
+        <nav class="hero-nav" aria-label="Main" data-avoid>
+          <a href="#work">Work</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="hero-copy" data-avoid>
+          <h1 class="hero-name" id="name">Maia Branson</h1>
+          <p class="hero-intro">
+            Junior designer. This is a placeholder introduction: replace it with one or two sentences about what you make and the kind of work you are looking for.
+          </p>
+        </div>
+
+        <a class="hero-cue" href="#work" data-avoid>
+          See the work
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </a>
+      </header>
+
+      <main class="sheet">
+        <section class="range" aria-labelledby="range-title">
+          <div class="range-copy">
+            <h2 id="range-title">What I work on</h2>
+            <p>Placeholder list. Replace these with the kinds of work you want to be hired for.</p>
+          </div>
+          <ul class="focus-list" id="disciplines"></ul>
+        </section>
+
+        <section class="work" id="work" aria-labelledby="work-title">
+          <div class="section-head">
+            <h2 id="work-title">Selected work</h2>
+            <p>These four are placeholders. Real case studies are on the way.</p>
+          </div>
+          <div class="cards" id="cards"></div>
+          <noscript><p>The project list needs JavaScript turned on.</p></noscript>
+        </section>
+
+        <section class="about" id="about" aria-labelledby="about-title">
+          <h2 id="about-title">About</h2>
+          <div class="about-body">
+            <p>Placeholder. Write a short paragraph about your background: where you studied or trained, what you care about in design, and what you are looking for next.</p>
+            <p>Keep it to a few sentences. The work above should do most of the talking.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="foot" id="contact">
+        <div class="foot-copy" data-avoid>
+          <h2>Get in touch</h2>
+          <dl class="contact">
+            <div><dt>Email</dt><dd>To be added</dd></div>
+            <div><dt>LinkedIn</dt><dd>To be added</dd></div>
+            <div><dt>CV</dt><dd>To be added</dd></div>
+          </dl>
+        </div>
+        <div class="foot-base" data-avoid>
+          <span>&copy; 2026 Maia Branson</span>
+          <a href="#top" id="to-top">Back to top</a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Case studies are rendered into this element from src/projects.js. -->
+    <article id="case" class="case" hidden></article>
+
+    <canvas id="burst" class="burst" aria-hidden="true"></canvas>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
