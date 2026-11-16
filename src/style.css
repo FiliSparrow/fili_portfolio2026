@@ -1,9 +1,710 @@
-/* Placeholder styles. The real design comes after the reference review. */
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+/* ---------- Tokens ---------- */
+:root {
+  --navy: #060a1a;
+  --navy-line: rgba(120, 150, 255, 0.07);
+  --on-navy: #eef2ff;
+  --on-navy-soft: #aab8e2;
+  --blue: #6f9bff;
+
+  --paper: #f2f4f8;
+  --paper-raised: #e6e9f1;
+  --ink: #0f1630;
+  --ink-soft: #49526f;
+  --line: #cfd5e3;
+  --blue-ink: #2450d6;
+
+  --sans: "Host Grotesk Variable", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --radius: 16px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --cell: 12px;
 }
 
-main {
-  padding: 2rem;
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: #3a4a85 var(--navy);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--navy);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--blue-ink);
+  color: #fff;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue-ink);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.hero :focus-visible,
+.foot :focus-visible {
+  outline-color: var(--blue);
+}
+
+.skip {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 20;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateY(-200%);
+}
+
+.skip:focus-visible {
+  transform: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Butterfly field ---------- */
+.field {
+  position: fixed;
+  inset: 0;
+  height: 100lvh;
+  z-index: 0;
+  background-color: var(--navy);
+  /* The character grid the butterflies are drawn on. */
+  background-image: linear-gradient(var(--navy-line) 1px, transparent 1px), linear-gradient(90deg, var(--navy-line) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+}
+
+.field canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.is-case .field {
+  display: none;
+}
+
+.burst {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  /* Its own layer in the page transition, so the scatter flies over the growing cover. */
+  view-transition-name: burst;
+}
+
+#home {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: calc(1.25rem + env(safe-area-inset-top)) var(--gutter) 1.5rem;
+  color: var(--on-navy);
+}
+
+.hero-nav {
+  justify-self: end;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.hero-nav a {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  color: var(--on-navy-soft);
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.hero-copy {
+  align-self: end;
+  max-width: 44rem;
+  padding-block: 2rem;
+}
+
+.hero-name {
+  font-size: clamp(3.25rem, 10.5vw, 6rem);
+  font-weight: 500;
+  line-height: 0.95;
+}
+
+.hero-intro {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.45;
+  color: var(--on-navy-soft);
+}
+
+.hero-cue {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  color: var(--on-navy);
+}
+
+.hero-cue svg {
+  transition: transform 0.3s var(--ease-out);
+}
+
+/* ---------- The sheet of work ---------- */
+.sheet {
+  position: relative;
+  background: var(--paper);
+  border-radius: 28px;
+  padding: clamp(4rem, 9vw, 8rem) var(--gutter) clamp(4rem, 8vw, 7rem);
+  scrollbar-color: auto;
+}
+
+.sheet > section {
+  max-width: 82rem;
+  margin-inline: auto;
+}
+
+.sheet > section + section {
+  margin-top: clamp(6rem, 12vw, 11rem);
+}
+
+.sheet h2 {
+  font-size: clamp(2rem, 4.6vw, 3.5rem);
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+.section-head p,
+.range-copy p {
+  max-width: 24rem;
+  color: var(--ink-soft);
+}
+
+/* Disciplines that pull into focus as they pass the middle of the screen. */
+.range {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.range-copy h2 {
+  margin-bottom: 1rem;
+}
+
+.focus-list li {
+  font-size: clamp(2.5rem, 8.2vw, 6rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+/* Project cards */
+.cards {
+  display: grid;
+  gap: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 4rem);
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+}
+
+.card-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-head h3 {
+  font-size: clamp(1.625rem, 3vw, 2.25rem);
+}
+
+.card-head p {
+  max-width: 15rem;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  text-align: right;
+  color: var(--ink-soft);
+}
+
+.cover {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+
+.cover canvas,
+.cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.card .cover {
+  aspect-ratio: 4 / 3;
+}
+
+.chip {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
+.card-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--ink);
+}
+
+.card-view svg,
+.back svg,
+.next svg {
+  transition: transform 0.3s var(--ease-out);
+}
+
+.card:active .cover {
+  transform: scale(0.99);
+}
+
+/* About */
+.about {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.about-body {
+  display: grid;
+  gap: 1rem;
+  max-width: 65ch;
+  font-size: clamp(1.125rem, 1.8vw, 1.375rem);
+  line-height: 1.5;
+}
+
+.about-body p + p {
+  color: var(--ink-soft);
+}
+
+/* ---------- Footer: the field returns ---------- */
+.foot {
+  min-height: 88svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 3rem;
+  padding: clamp(5rem, 10vw, 8rem) var(--gutter) calc(1.5rem + env(safe-area-inset-bottom));
+  color: var(--on-navy);
+}
+
+.foot-copy {
+  align-self: center;
+  justify-self: start;
+}
+
+.foot h2 {
+  font-size: clamp(3rem, 9vw, 6rem);
+}
+
+.contact {
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 0.25rem;
+  min-width: min(22rem, 100%);
+}
+
+.contact div {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(170, 184, 226, 0.22);
+}
+
+.contact dt {
+  color: var(--on-navy-soft);
+}
+
+.foot-base {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9375rem;
+  color: var(--on-navy-soft);
+}
+
+.foot-base a {
+  color: var(--on-navy);
+}
+
+/* ---------- Case study ---------- */
+.case {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  background: var(--paper);
+  padding: calc(1.25rem + env(safe-area-inset-top)) var(--gutter) clamp(4rem, 8vw, 7rem);
+}
+
+.case-inner {
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+
+.case-cover {
+  margin-top: 1rem;
+  aspect-ratio: 16 / 8;
+  view-transition-name: cover;
+}
+
+.case-title {
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(2.75rem, 7vw, 5rem);
+}
+
+.case-title:focus {
+  outline: none;
+}
+
+.case-summary {
+  margin-top: 1.25rem;
+  max-width: 36rem;
+  font-size: clamp(1.1875rem, 2vw, 1.5rem);
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.facts {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1rem 2rem;
+  padding-block: 1.25rem;
+  border-block: 1px solid var(--line);
+}
+
+.facts dt {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
+.case-section {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.case-section h2 {
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+}
+
+.case-section p {
+  max-width: 65ch;
+  font-size: 1.125rem;
+}
+
+.case-figure {
+  margin-top: 1.25rem;
+}
+
+.case-figure .cover {
+  aspect-ratio: 16 / 9;
+}
+
+.case-figure figcaption {
+  margin-top: 0.7rem;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.next {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  text-decoration: none;
+}
+
+.next-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--ink-soft);
+}
+
+.next-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: clamp(1.75rem, 4.5vw, 3rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.next .chip {
+  display: none;
+}
+
+.next .cover {
+  width: clamp(6.5rem, 22vw, 14rem);
+  aspect-ratio: 4 / 3;
+}
+
+/* ---------- Hover (only where a real pointer exists) ---------- */
+@media (hover: hover) {
+  .hero-nav a:hover {
+    color: var(--on-navy);
+    background: rgba(170, 184, 226, 0.14);
+  }
+
+  .hero-cue:hover svg {
+    transform: translateY(3px);
+  }
+
+  .card:hover .cover canvas,
+  .card:hover .cover img,
+  .next:hover .cover canvas,
+  .next:hover .cover img {
+    transform: scale(1.03);
+  }
+
+  .card:hover .card-view svg,
+  .next:hover .next-title svg {
+    transform: translate(2px, -2px);
+  }
+
+  .back:hover svg {
+    transform: translateX(-3px);
+  }
+}
+
+/* ---------- Wider screens ---------- */
+@media (min-width: 760px) {
+  .range {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+    align-items: start;
+  }
+
+  .range-copy {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .cards {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .card:nth-child(4n + 1) {
+    grid-column: 1 / span 5;
+  }
+
+  .card:nth-child(4n + 1) .cover {
+    aspect-ratio: 4 / 5;
+  }
+
+  .card:nth-child(4n + 2) {
+    grid-column: 6 / span 7;
+    margin-top: 7rem;
+  }
+
+  .card:nth-child(4n + 3) {
+    grid-column: 1 / span 7;
+  }
+
+  .card:nth-child(4n + 4) {
+    grid-column: 8 / span 5;
+    margin-top: 5rem;
+  }
+
+  .card:nth-child(4n + 4) .cover {
+    aspect-ratio: 1;
+  }
+
+  .about {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  }
+}
+
+@media (max-width: 759px) {
+  .sheet {
+    border-radius: 20px;
+  }
+
+  .card-head {
+    flex-direction: column;
+    align-items: start;
+    gap: 0.4rem;
+  }
+
+  .card-head p {
+    max-width: none;
+    text-align: left;
+  }
+
+  .case-cover {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ---------- Project to case-study transition ---------- */
+::view-transition-group(cover) {
+  animation-duration: 0.45s;
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-old(cover),
+::view-transition-new(cover) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+::view-transition-old(burst) {
+  display: none;
+}
+
+::view-transition-new(burst) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: 0.18s ease-out both vt-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.32s var(--ease-out) 0.06s both vt-in;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
