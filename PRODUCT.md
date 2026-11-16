@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Plain static HTML, CSS and JavaScript. No framework and no build step, so it can be hosted anywhere. Deploy target: undecided.
+Delegated: the owner knows HTML, CSS and JavaScript and left the tooling choice open for a fluid, motion-led site. Chosen: Vite as dev server and bundler, plain HTML/CSS/JS modules, and the Motion library (`motion`, vanilla API) for animation. The output is still a static site. Deploy target: undecided.
 
 ## Users
 
@@ -42,7 +42,7 @@ Undecided. The owner has not yet named what sets them apart from other juniors. 
 
 ## Brand Commitments
 
-- Name: "Fili" (from the repository name; full display name and how they want to be credited still to be confirmed).
+- Name shown on the site: **Maia Branson**. ("Fili" is the repository name only.)
 - No voice, logo or identity assets exist yet.
 
 ## Evidence on Hand
@@ -50,6 +50,13 @@ Undecided. The owner has not yet named what sets them apart from other juniors. 
 - The owner has shipped or client work, school or course projects and personal or concept projects. **None are written up yet**: no case-study text, images or project names are in the repo.
 - Until real content arrives, projects appear as clearly labelled placeholders. Never fabricate project names, clients, results, metrics, testimonials, employers or awards.
 - No CV, photo, social links or contact address are in the repo yet. Ask for them; don't invent them.
+
+## Confirmed Experience Goals
+
+- First screen: Maia's name and role together with a brief motion moment, handing off quickly to the work.
+- The interaction that matters most: moving from a project into its case study fluidly, without a hard page jump.
+- Feels wrong if: motion is slow or showy and gets in the way of the work, or the site is hard to read or use on a phone.
+- Visual direction: on hold until the owner shares reference material.
 
 ## Product Principles
 
