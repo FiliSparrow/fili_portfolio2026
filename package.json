@@ -1,5 +1,16 @@
 {
+  "name": "maia-branson-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
   "dependencies": {
     "motion": "^14.14.0"
+  },
+  "devDependencies": {
+    "vite": "^6.4.6"
   }
 }
