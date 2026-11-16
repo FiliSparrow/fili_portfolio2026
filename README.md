@@ -29,7 +29,11 @@ npm run dev
 ## Replacing the placeholders
 
 - **Introduction, about and contact:** edit the text in `index.html`.
-- **Projects:** edit `src/projects.js`. To use a real picture, put it in a `public/` folder and set `image: "/your-file.jpg"` on the project.
+- **Projects:** edit `src/projects.js`. To use a real picture, put it in a `public/` folder and set `image: "your-file.jpg"` on the project (no leading slash).
 - **Disciplines list:** edit `disciplines` at the bottom of `src/projects.js`.
+
+## Publishing
+
+Pushing to `main` builds the site and publishes it to GitHub Pages (see `.github/workflows/deploy.yml`). In the repository's Settings, under Pages, the source must be set to **GitHub Actions**.
 
 `PRODUCT.md` and `DESIGN.md` describe what the site is for and how it should look.

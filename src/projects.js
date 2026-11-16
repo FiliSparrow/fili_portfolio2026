@@ -2,7 +2,7 @@
 //
 // Every project below is a PLACEHOLDER. Replace the title, summary, category,
 // facts and sections with your own, and set `image` to a picture in /public
-// (for example image: "/work/my-project.jpg") to replace the generated cover.
+// (for example image: "work/my-project.jpg", with no leading slash) to replace the generated cover.
 
 const placeholderSections = [
   {
